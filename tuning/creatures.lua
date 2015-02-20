@@ -91,10 +91,11 @@ SHEEP.PREFABS = {
 	"meat",
 	"skyflower",
 	"cloud_cotton",
-	"wool",
+	"beefalowool",
 }
 
 SHEEP.PERIODICSPAWN_PREFAB = "skyflower"
+SHEEP.MINIMUM_SPACING = 0
 
 SHEEP.LOOT = {
 	{'meat',	0.70},	
@@ -106,13 +107,14 @@ SHEEP.LOOT = {
 }
 
 RAM.LOOT = {
-	{'meat',	0.80},	
-	{'meat',	0.80},
+	{'meat',	1.00},	
+	{'meat',	0.90},
 	{'meat',	0.70},
 	{'meat',	0.70},
-	{'wool',	0.80},
-	{'wool',	0.80},
-	{'wool',	0.80},
+	{'meat',	0.70},	
+	{'beefalowool',	0.90},
+	{'beefalowool',	0.80},
+	{'beefalowool',	0.80},
 }
 
 SHEEP.SHAVE_BITS = 3
@@ -127,7 +129,7 @@ SHEEP.HAIR_GROWTH_DAYS = 3
 -- Owl
 
 OWL.SCALE = 1.2
-OWL.WHO_INTERVAL = function() return math.random(1,4) end
+OWL.WHO_INTERVAL = math.random(1,4)
 
 OWL.HEALTH = 180
 OWL.DAMAGE = 15
@@ -260,8 +262,10 @@ GOOSE.LOOT = {
 	{'drumstick', 	 0.90},
 	{'drumstick', 	 0.50},
 	{'drumstick', 	 1.00},	
-	{'robin_winter', 1.00},
-	{'robin_winter', 0.90},	
+	{'feather_robin_winter', 1.00},
+	{'feather_robin_winter', 0.90},	
+	{'feather_robin_winter', 0.90},
+	{'feather_robin_winter', 0.90},
 	{'golden_egg',	 0.10},
 }
 
@@ -366,6 +370,8 @@ BEANLET_ZEALOT.HEALTH = 150
 
 BEANLET_ZEALOT.DAMAGE = 35
 BEANLET_ZEALOT.ATTACK_PERIOD = 1.5
+
+-- Beanlet Combat
 
 BEANLET.SCARE_RADIUS = 12
 
@@ -504,10 +510,10 @@ LIVE_GNOME.COOKED_PRODUCT = "rubber"
 -- Gummybear
 
 GUMMYBEAR.SCALE = 0.9
-GUMMYBEAR.COLOR1 = function() return 0.1 + math.random() * 0.9 end
-GUMMYBEAR.COLOR2 = function() return 0.1 + math.random() * 0.9 end
-GUMMYBEAR.COLOR3 = function() return 0.1 + math.random() * 0.9 end
-GUMMYBEAR.ALPHA = 0.75
+
+GUMMYBEAR.COLOR = function() return 0.1 + math.random() * 0.9 end
+
+GUMMYBEAR.ALPHA = function() return 0.75 + math.random() end
 
 GUMMYBEAR.WALKSPEED = 2
 GUMMYBEAR.RUNSPEED = 5
@@ -555,7 +561,18 @@ GUMMYBEAR.LOOT = {
 
 -- Bean Giant
 
+BEAN_GIANT.TAGS = {
+	"epic",
+	"monster",
+	"hostile",
+	"scarytoprey",
+	"beanmonster",
+	"largecreature",
+}
+
 BEAN_GIANT.HEALTH = 1300
+BEAN_GIANT.HEALTH_PERIOD = 60
+BEAN_GIANT.HEAL_PERCENT = 0.4
 
 BEAN_GIANT.WALKSPEED = 3
 BEAN_GIANT.RUNSPEED = 3
@@ -564,7 +581,11 @@ BEAN_GIANT.DAMAGE = 130
 BEAN_GIANT.RANGE = 4
 BEAN_GIANT.ATTACK_PERIOD = 3
 
-BEAN_GIANT.SCALE = 1
+BEAN_GIANT.TRANSFORM_BUFFER = 0.5
+
+BEAN_GIANT.SHAKE_DIST = 40
+
+BEAN_GIANT.SCALE = 2
 
 BEAN_GIANT.PLAYER_DAMAGE_PERCENT = 0.8
 
@@ -580,8 +601,8 @@ BEAN_GIANT.MAX_CHILDREN = 10
 
 BEAN_GIANT.TARGET_DIST = 30
 
-BEAN_GIANT.HOSTILE_SANITY_AURA = -TUNING.SANITYAURA_LARGE
-BEAN_GIANT.CALM_SANITY_AURA = -TUNING.SANITYAURA_HUGE
+BEAN_GIANT.HOSTILE_SANITY_AURA = TUNING.SANITYAURA_LARGE
+BEAN_GIANT.CALM_SANITY_AURA = TUNING.SANITYAURA_HUGE
 
 -- Bean Giant Brain
 
@@ -597,21 +618,30 @@ BEAN_GIANT.PREFABS = {
     "vine",
     "beanlet_zealot",
     "greenbean",   
-    --"bean_brain"
+    "bean_brain",
 }
 
 BEAN_GIANT.LOOT = {
 	{'beanstalk_chunk', 1.00},
 	{'beanstalk_chunk', 1.00},
+	{'beanstalk_chunk', 1.00},
+	{'beanstalk_chunk', 1.00},
+	{'beanstalk_chunk', 1.00},
 	{'beanstalk_chunk', 0.70},
 	{'beanstalk_chunk', 0.70},
 	{'beanstalk_chunk', 0.70},
+	{'beanstalk_chunk', 0.60},
+	{'beanstalk_chunk', 0.60},
+	{'greenbean',       1.00},
+	{'greenbean',       1.00},
 	{'greenbean',       1.00},
 	{'greenbean',       1.00},
 	{'greenbean',       0.70},
 	{'greenbean',       0.70},
-	{'greenbean',       0.70},
-	--{'bean_brain'}    1.00},
+	{'greenbean',       0.60},
+	{'greenbean',       0.60},
+	{'greenbean',       0.60},	
+	{'bean_brain',      1.00},
 }
 
 ---------------------------------------
@@ -623,7 +653,7 @@ VINE.RANGE = 2
 VINE.DAMAGE = 6
 VINE.ATTACK_PERIOD = 5
 
-VINE.SANITY_AURA = -TUNING.SANITYAURA_LARGE*0.5
+VINE.SANITY_AURA = TUNING.SANITYAURA_LARGE * 0.5
 
 VINE.WALKSPEED = 6.3
 VINE.RUNSPEED = 6.3
@@ -652,5 +682,88 @@ VINE.LOOT = {
 	{'beanstalk_chunk',	0.70},
 	{'beanstalk_chunk',	0.50},
 }
+
+---------------------------------------
+
+---------------------------------------
+
+-- Alien
+
+ALIEN.HEALTH = 30
+
+ALIEN.WALKSPEED = 3.2
+
+ALIEN.DAMAGE = 50
+ALIEN.ATTACK_PERIOD = 5
+
+ALIEN.SCALE = 0.6
+
+ALIEN.COLOURS = {
+    {198/255,43/255,43/255},
+    {79/255,153/255,68/255},
+    {35/255,105/255,235/255},
+    {233/255,208/255,69/255},
+    {109/255,50/255,163/255},
+    {222/255,126/255,39/255},
+}
+
+-- Loot and Prefabs
+
+ALIEN.PREFABS = {
+    "nightmarefuel",
+    "crystal_fragment_relic",
+    "crystal_fragment_light",
+    "crystal_fragment_spire",
+    "crystal_fragment_water",
+}
+
+ALIEN.LOOT = {
+    {'nightmarefuel', 0.80}
+}
+
+ALIEN.FRAGMENTS = {
+    "crystal_fragment_relic",
+    "crystal_fragment_light",
+    "crystal_fragment_spire",
+    "crystal_fragment_water",
+}
+
+--Chance for a fragment to drop.
+ALIEN.RARECHANCE = 0.20
+
+---------------------------------------
+
+-- Marshmallow Bee
+
+BEE_MARSHMALLOW.UNCHARGED_HEALTH = TUNING.BEE_HEALTH
+BEE_MARSHMALLOW.CHARGED_HEALTH = TUNING.BEE_HEALTH
+
+BEE_MARSHMALLOW.UNCHARGED_DAMAGE = 0
+BEE_MARSHMALLOW.CHARGED_DAMAGE = TUNING.BEE_DAMAGE
+
+BEE_MARSHMALLOW.UNCHARGED_ATTACK_PERIOD = TUNING.BEE_ATTACK_PERIOD
+BEE_MARSHMALLOW.CHARGED_ATTACK_PERIOD = TUNING.BEE_ATTACK_PERIOD
+
+BEE_MARSHMALLOW.UNCHARGED_SCALE = 1
+BEE_MARSHMALLOW.CHARGED_SCALE = 2
+
+BEE_MARSHMALLOW.FOODTYPE = "MEAT"
+BEE_MARSHMALLOW.HEALTHVALUE = 0
+BEE_MARSHMALLOW.HUNGERVALUE = 10
+BEE_MARSHMALLOW.SANITYVALUE = -10
+
+-- Loot and Prefabs
+
+BEE_MARSHMALLOW.PREFABS = {
+	"marshmallow",
+	"bee_stinger",
+}
+
+BEE_MARSHMALLOW.LOOT = {
+	{'marshmallow',	0.80},
+	{'bee_stinger',	0.70},
+}
+
+BEE_MARSHMALLOW.NUMRANDOMLOOT = 1
 
 ---------------------------------------

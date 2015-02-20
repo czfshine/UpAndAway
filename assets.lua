@@ -12,8 +12,10 @@ Assets = GLOBAL.JoinArrays(
 	AnimationAssets {
 		"generating_cloud",
 		"temperature_meter",
+		--"player_drink.zip",
 	},
 
+	--[=[
 	InventoryImageAssets {
 		"skyflower_petals",
 		"datura_petals",
@@ -159,6 +161,7 @@ Assets = GLOBAL.JoinArrays(
 	InventoryImageAtlases {
 		--"nil",
 	},
+	]=]--
 
 	{
 		Asset("SOUNDPACKAGE", "sound/project.fev"),
@@ -169,11 +172,15 @@ Assets = GLOBAL.JoinArrays(
 	},
 
 	ImageAssets {
+		"ua_inventoryimages",
+		"ua_minimap",
+
 		"uppanels",
 		"bg_up",
 		"bg_gen",
 		"up_new",
 
+		--[=[
 		--Minimap icons.
 		"winnie",
 		"beanstalk",
@@ -205,11 +212,17 @@ Assets = GLOBAL.JoinArrays(
 		"weavernest",
 
 		--"bean_giant_statue",
+		]=]--
 	},
 
 	--Winnie assets.
 	ImageAssets "saveslot_portraits" {
 		"winnie",
+	},
+
+	ImageAssets "avatars" {
+		"avatar_winnie",
+		"avatar_ghost_winnie",
 	},
 
 	ImageAssets "selectscreen_portraits" {

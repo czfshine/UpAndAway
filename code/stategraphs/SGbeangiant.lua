@@ -4,17 +4,16 @@ require("stategraphs/commonstates")
 
 local actionhandlers = 
 {
-	ActionHandler(ACTIONS.HAMMER, "attack"),
-	ActionHandler(ACTIONS.GOHOME, "taunt"),
+    ActionHandler(ACTIONS.HAMMER, "attack"),
+    ActionHandler(ACTIONS.GOHOME, "taunt"),
 }
 
 local SHAKE_DIST = 40
 
 local function DeerclopsFootstep(inst)
     inst.SoundEmitter:PlaySound("dontstarve/creatures/deerclops/step")
-    local player = GetClosestInstWithTag("player", inst, SHAKE_DIST)
-    if player then
-        player.components.playercontroller:ShakeCamera(inst, "VERTICAL", 0.5, 0.03, 2, SHAKE_DIST)
+    for i, v in ipairs(AllPlayers) do
+        v:ShakeCamera(CAMERASHAKE.VERTICAL, .5, .03, 2, inst, SHAKE_DIST)
     end
 end
 
@@ -53,7 +52,7 @@ local states=
         },
     },      
     
-	State{
+    State{
         name = "taunt",
         tags = {"busy"},
         
@@ -83,10 +82,10 @@ local states=
 
 CommonStates.AddWalkStates( states,
 {
-	starttimeline =
-	{
+    starttimeline =
+    {
         TimeEvent(1*FRAMES, DeerclopsFootstep),
-	},
+    },
     walktimeline = 
     { 
         TimeEvent(1*FRAMES, DeerclopsFootstep),
@@ -100,10 +99,10 @@ CommonStates.AddWalkStates( states,
 
 CommonStates.AddCombatStates(states,
 {
-	hittimeline =
-	{
+    hittimeline =
+    {
         TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/creatures/deerclops/hurt") end),
-	},
+    },
     attacktimeline = 
     {
         TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/creatures/deerclops/attack") end),
@@ -114,9 +113,8 @@ CommonStates.AddCombatStates(states,
                 inst.bufferedaction.target.components.workable:SetWorkLeft(1)
                 inst:PerformBufferedAction()
             end
-            local player = GetClosestInstWithTag("player", inst, SHAKE_DIST)
-            if player then
-                player.components.playercontroller:ShakeCamera(inst, "FULL", 0.5, 0.05, 2, SHAKE_DIST)
+            for i, v in ipairs(AllPlayers) do
+                v:ShakeCamera(CAMERASHAKE.FULL, .5, .05, 2, inst, SHAKE_DIST)
             end
         end),
         TimeEvent(36*FRAMES, function(inst) inst.sg:RemoveStateTag("attack") end),
@@ -130,9 +128,8 @@ CommonStates.AddCombatStates(states,
             else
                 inst.SoundEmitter:PlaySound("dontstarve/creatures/deerclops/bodyfall_dirt")
             end    
-            local player = GetClosestInstWithTag("player", inst, SHAKE_DIST)
-            if player then
-                player.components.playercontroller:ShakeCamera(inst, "FULL", 0.7, 0.02, 3, SHAKE_DIST)
+            for i, v in ipairs(AllPlayers) do
+                v:ShakeCamera(CAMERASHAKE.FULL, .7, .02, 3, inst, SHAKE_DIST)
             end
         end),
     },

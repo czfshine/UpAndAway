@@ -16,18 +16,9 @@ local events=
 
     EventHandler("doattack", function(inst, data) if not inst.components.health:IsDead() then inst.sg:GoToState("attack", data.target) end end),
     EventHandler("death", function(inst) inst.sg:GoToState("death") end),
-    EventHandler("attacked", function(inst) if inst.components.health:GetPercent() > 0 and not inst.sg:HasStateTag("attack") then inst.sg:GoToState("hit") end end), 
-    --[[EventHandler("heardhorn", function(inst, data)
-        if inst.components.health:GetPercent() > 0
-           and not inst.sg:HasStateTag("attack")
-           and data and data.musician then
-            inst:FacePoint(Vector3(data.musician.Transform:GetWorldPosition()))
-            inst.sg:GoToState("bellow")
-        end
-    end),]]         
-    EventHandler("loseloyalty", function(inst) if inst.components.health:GetPercent() > 0 and not inst.sg:HasStateTag("attack") then inst.sg:GoToState("shake") end end),    
+    EventHandler("attacked", function(inst) if inst.components.health:GetPercent() > 0 and not inst.sg:HasStateTag("attack") then inst.sg:GoToState("hit") end end),     
     --Currently trying to figure out how to make sheep move horizontally as well as bounce up and down.
-	--EventHandler("locomote", function(inst) if inst.components.locomotor and not inst.sg:HasStateTag("running") then inst.sg:GoToState("bounce") end end),
+    --EventHandler("locomote", function(inst) if inst.components.locomotor and not inst.sg:HasStateTag("running") then inst.sg:GoToState("bounce") end end),
 }   
 
 local states=
@@ -79,25 +70,25 @@ local states=
         
         onenter = function(inst)
             inst.components.locomotor:WalkForward()
-			inst.Physics:SetDamping(0)
+            inst.Physics:SetDamping(0)
             inst.Physics:SetMotorVel(0,8+math.random()*8,0)
-			inst.AnimState:PlayAnimation("walk_pre")
+            inst.AnimState:PlayAnimation("walk_pre")
             inst.AnimState:PushAnimation("walk_loop")
         end,
         
         onupdate = function(inst)
             local pt = Point(inst.Transform:GetWorldPosition())
             if pt.y > 1 then
-				inst.components.locomotor:WalkForward()
-				inst.Physics:SetMotorVel(0,0,0)
+                inst.components.locomotor:WalkForward()
+                inst.Physics:SetMotorVel(0,0,0)
                 pt.y = 0
-				inst.Physics:SetDamping(5)
+                inst.Physics:SetDamping(5)
                 inst.Physics:Teleport(pt.x,pt.y,pt.z)
-	            inst.DynamicShadow:Enable(true)
+                inst.DynamicShadow:Enable(true)
                 inst.sg:GoToState("idle")
             end
         end,       
-		
+        
         events=
         {
             EventHandler("animqueueover", function (inst) inst.sg:GoToState("idle") end),
@@ -109,7 +100,7 @@ local states=
         tags = {"canrotate"},
         
         onenter = function(inst)
-			inst.AnimState:PushAnimation("walk_pst")
+            inst.AnimState:PushAnimation("walk_pst")
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("shake")
         end,
@@ -125,10 +116,10 @@ local states=
         tags = {"canrotate"},
         
         onenter = function(inst)
-			inst.AnimState:PushAnimation("walk_pst")
+            inst.AnimState:PushAnimation("walk_pst")
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("bellow")
-            inst.SoundEmitter:PlaySound(inst.sounds.grunt)
+            inst.SoundEmitter:PlaySound(inst.sounds.grunt, "grunt", 0.1)
         end,
        
         events=
@@ -204,7 +195,7 @@ local states=
         tags = {"attack", "busy"},
         
         onenter = function(inst, target)    
-			inst.sg.statemem.target = target
+            inst.sg.statemem.target = target
             inst.SoundEmitter:PlaySound(inst.sounds.angry)
             inst.components.combat:StartAttack()
             inst.components.locomotor:StopMoving()
@@ -229,7 +220,7 @@ local states=
         tags = {"busy"},
         
         onenter = function(inst)
-			inst.SoundEmitter:PlaySound(inst.sounds.yell)
+            inst.SoundEmitter:PlaySound(inst.sounds.yell)
             inst.AnimState:PlayAnimation("death")
             inst.Physics:Stop()
             RemovePhysicsColliders(inst)            
@@ -263,16 +254,8 @@ local states=
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("hair_growth") 
                 inst.SoundEmitter:PlaySound("dontstarve/beefalo/hairgrow_pop")
-                if inst:HasTag("baby") and inst.components.growable then
-                    inst.AnimState:SetBuild("beefalo_baby_build")
-                    inst.components.growable:SetStage(inst.components.growable:GetNextStage() )
-                elseif inst.components.beard then
-                    local herd = inst.components.herdmember and inst.components.herdmember:GetHerd()
-                    if herd and herd.components.mood and herd.components.mood:IsInMood() then
-                        inst.AnimState:SetBuild("beefalo_heat_build") 
-                    else
-                        inst.AnimState:SetBuild("beefalo_build") 
-                    end
+                if inst.components.beard then
+                    inst.AnimState:SetBuild("beefalo_build") 
                     inst.components.beard.bits = 3
                 end
                 inst.hairGrowthPending = false
@@ -289,7 +272,7 @@ local states=
         tags = {"busy", "sleeping"},
         
         onenter = function(inst)
-            inst.AnimState:SetBuild("beefalo_shaved_build")
+            --inst.AnimState:SetBuild("beefalo_shaved_build")
             inst.AnimState:PlayAnimation("shave")
         end,
         

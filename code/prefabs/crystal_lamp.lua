@@ -1,8 +1,10 @@
 BindGlobal()
 
+local CFG = TheMod:GetConfig()
+
 local assets =
 {
-	Asset("ANIM", "anim/crystal_lamp.zip"),
+    Asset("ANIM", "anim/crystal_lamp.zip"),
 }
 
 local game = wickerrequire "utils.game"
@@ -27,16 +29,16 @@ end
 
 --[[
 local function onLight(inst)
-	local partner = GLOBAL.GetClosestInstWithTag("crystal_lamp", inst, 100)
+    local partner = GLOBAL.GetClosestInstWithTag("crystal_lamp", inst, 100)
 
-	inst.Light:Enable(true)
+    inst.Light:Enable(true)
 
-	if partner and not partner.components.machine.ison then
-		partner.components.machine.turnonfn = onLight
-		partner:DoTaskInTime(0.3, function(inst, data) partner.components.machine:TurnOn() end)	
+    if partner and not partner.components.machine.ison then
+        partner.components.machine.turnonfn = onLight
+        partner:DoTaskInTime(0.3, function(inst, data) partner.components.machine:TurnOn() end)	
 
-		print "Partner lamp lit."
-	end	
+        print "Partner lamp lit."
+    end	
 
 end
 --]]
@@ -59,18 +61,18 @@ end
 
 --[[
 local function onDim(inst)
-	local partner = GLOBAL.GetClosestInstWithTag("crystal_lamp", inst, 100)
-	
-	inst.Light:Enable(false)
+    local partner = GLOBAL.GetClosestInstWithTag("crystal_lamp", inst, 100)
+    
+    inst.Light:Enable(false)
 
-	if partner and partner.components.machine.ison then
-		partner.components.machine.turnonfn = onDim
-		partner:DoTaskInTime(0.3, function(inst, data) partner.components.machine:TurnOff() end)
+    if partner and partner.components.machine.ison then
+        partner.components.machine.turnonfn = onDim
+        partner:DoTaskInTime(0.3, function(inst, data) partner.components.machine:TurnOff() end)
 
-		furtherpartner = GLOBAL.GetClosestInstWithTag("crystal_lamp", partner, 100)
+        furtherpartner = GLOBAL.GetClosestInstWithTag("crystal_lamp", partner, 100)
 
-		print "Partner lamp dimmed."
-	end	
+        print "Partner lamp dimmed."
+    end	
 end
 ]] 
 
@@ -93,59 +95,59 @@ end
 
 local function fn(Sim)
 
-	local inst = CreateEntity()
-	inst.entity:AddTransform()
-	inst.entity:AddAnimState()
-	inst.entity:AddSoundEmitter()
-	MakeObstaclePhysics(inst, 1)
+    local inst = CreateEntity()
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddSoundEmitter()
+    MakeObstaclePhysics(inst, 1)
 
     local shadow = inst.entity:AddDynamicShadow()
     shadow:SetSize(2.5, 1.5)
 
-	inst.AnimState:SetBank("crystal_lamp")
-	inst.AnimState:SetBuild("crystal_lamp")
-	inst.AnimState:PlayAnimation("idle")
+    inst.AnimState:SetBank("crystal_lamp")
+    inst.AnimState:SetBuild("crystal_lamp")
+    inst.AnimState:PlayAnimation("idle")
     inst.Transform:SetScale(1.7,1.7,1.7)
 
 
-	------------------------------------------------------------------------
-	SetupNetwork(inst)
-	------------------------------------------------------------------------
+    ------------------------------------------------------------------------
+    SetupNetwork(inst)
+    ------------------------------------------------------------------------
 
 
-	inst:AddComponent("inspectable")
+    inst:AddComponent("inspectable")
 
-	inst:AddTag("crystal_lamp")
+    inst:AddTag("crystal_lamp")
 
     inst.entity:AddMiniMapEntity()
     inst.MiniMapEntity:SetIcon("crystal_lamp.tex")	
 
-	inst:AddComponent("machine")
-	inst.components.machine.turnonfn = onLight
-	inst.components.machine.turnofffn = onDim	
+    inst:AddComponent("machine")
+    inst.components.machine.turnonfn = onLight
+    inst.components.machine.turnofffn = onDim	
 
     inst:AddTag("structure")
     inst:AddComponent("lootdropper")
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
-    inst.components.workable:SetWorkLeft(4)
+    inst.components.workable:SetWorkLeft(CFG.CRYSTAL_LAMP.WORK_TIME)
     inst.components.workable:SetOnFinishCallback(onhammered)
 
     inst:AddComponent("fueled")
-    inst.components.fueled.maxfuel = 100
-    inst.components.fueled.fueltype = "CRYSTAL"
+    inst.components.fueled.maxfuel = CFG.CRYSTAL_LAMP.FUEL
+    inst.components.fueled.fueltype = CFG.CRYSTAL_LAMP.FUEL_TYPE
     inst.components.fueled:SetDepletedFn(onEmpty)  
     inst.components.fueled.ontakefuelfn = onFill
     inst.components.fueled.accepting = true
-    inst.components.fueled:InitializeFuelLevel(60)
-    inst.components.fueled.rate = 0.7
+    inst.components.fueled:InitializeFuelLevel(CFG.CRYSTAL_LAMP.START_FUEL)
+    inst.components.fueled.rate = CFG.CRYSTAL_LAMP.FUEL_RATE
 
     local light = inst.entity:AddLight()
-    inst:DoPeriodicTask(0.7, function(inst)
+    inst:DoPeriodicTask(CFG.CRYSTAL_LAMP.FUEL_RATE, function(inst)
         if inst.components.fueled.currentfuel and inst.components.fueled.currentfuel >= 0 then
-            inst.Light:SetRadius(inst.components.fueled.currentfuel / 20)
+            inst.Light:SetRadius(inst.components.fueled.currentfuel / CFG.CRYSTAL_LAMP.RADIUS_MODIFIER)
         else
-            if inst.components.fueled.currentfuel <= 2 then
+            if inst.components.fueled.currentfuel <= CFG.CRYSTAL_LAMP.EMPTY_VALUE then
                 onEmpty(inst)
                 inst.Light:SetRadius(0) 
             end
@@ -156,10 +158,10 @@ local function fn(Sim)
     inst.Light:SetIntensity(.7)
     inst.Light:SetColour(135/255,221/255,12/255)
 
-	return inst
+    return inst
 end
 
 return {
-	Prefab ("common/inventory/crystal_lamp", fn, assets),
-	MakePlacer ("common/crystal_lamp_placer", "crystal_lamp", "crystal_lamp", "idle", false, false, false, 1.7), 
+    Prefab ("common/inventory/crystal_lamp", fn, assets),
+    MakePlacer ("common/crystal_lamp_placer", "crystal_lamp", "crystal_lamp", "idle", false, false, false, 1.7), 
 }

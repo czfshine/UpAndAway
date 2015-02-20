@@ -1,11 +1,13 @@
 BindGlobal()
 
+local CFG = TheMod:GetConfig()
+
 local assets=
 {
-	Asset("ANIM", "anim/beanlet_armor.zip"),
+    Asset("ANIM", "anim/beanlet_armor.zip"),
 
-    Asset( "ATLAS", "images/inventoryimages/beanlet_armor.xml" ),
-    Asset( "IMAGE", "images/inventoryimages/beanlet_armor.tex" ),
+    Asset( "ATLAS", inventoryimage_atlas("beanlet_armor") ),
+    Asset( "IMAGE", inventoryimage_texture("beanlet_armor") ),
 }
 
 local function OnBlocked(owner) 
@@ -23,10 +25,10 @@ local function onunequip(inst, owner)
 end
 
 local function fn()
-	local inst = CreateEntity()
+    local inst = CreateEntity()
     
-	inst.entity:AddTransform()
-	inst.entity:AddAnimState()
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
     MakeInventoryPhysics(inst)
     
     --inst.AnimState:SetBank("beanlet_armor")
@@ -44,18 +46,19 @@ local function fn()
     
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.foleysound = "dontstarve/creatures/spiderqueen/givebirth_foley"
-    inst.components.inventoryitem.atlasname = "images/inventoryimages/beanlet_armor.xml"
+    inst.components.inventoryitem.atlasname = inventoryimage_atlas("beanlet_armor")
     
     inst:AddComponent("armor")
-    inst.components.armor:InitCondition(200, .5)
+    inst.components.armor:InitCondition(CFG.BEANLET_ARMOR.ARMOR_HEALTH, CFG.BEANLET_ARMOR.AROMR_ABSORB)
     
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.BODY
-    inst.components.equippable.walkspeedmult = 1.4
+    inst.components.equippable.walkspeedmult = CFG.BEANLET_ARMOR.WALKMULTIPLIER
     
     inst.components.equippable:SetOnEquip(onequip)
     inst.components.equippable:SetOnUnequip(onunequip)
 
+    --This is not left to configuration, because it is tuned to look appropriate on a character.
     inst.Transform:SetScale(1.1,1.2,1.1)
 
     return inst

@@ -33,13 +33,33 @@ local submodules = {
 
 ---
 
-local function traceback(start_level)
+local function process_getinfo_args(thread, ...)
+	if thread == nil then
+		return ...
+	else
+		return thread, ...
+	end
+end
+
+local function traceback(thread, message, start_level)
+	if thread ~= nil and type(thread) ~= "thread" then
+		thread, message, start_level = nil, thread, message
+	end
+
+	if start_level == nil and type(message) == "number" then
+		start_level, message = message, nil
+	end
+
+	local pieces = {}
+	if message ~= nil then
+		table.insert(pieces, tostring(message))
+	end
+	table.insert(pieces, "stack traceback:")
+
 	local getinfo = debug.getinfo
 
-	local pieces = {"stack traceback:"}
-
 	for lvl = (start_level or 1) + 1, math.huge do
-		local info = getinfo(lvl, "nSl")
+		local info = getinfo( process_getinfo_args(thread, lvl, "nSl") )
 		if info == nil then break end
 
 		local is_C = (info.what == "C")
@@ -100,63 +120,22 @@ end
 
 local function dobasicextend(kernel)
 	local Lambda = wickerrequire "paradigms.functional"
+	local Logic = wickerrequire "lib.logic"
+	local Pred = wickerrequire "lib.predicates"
+	local Game = wickerrequire "game"
 
 	kernel.Lambda = Lambda
+	kernel.Logic = Logic
+	kernel.Pred = Pred
+	kernel.Game = Game
+
 	kernel.Nil = Lambda.Nil
 
 	kernel.traceback = traceback
 
-	kernel.ptraceback = function(lvl)
-		TheMod:Say(traceback((lvl or 1) + 1))
+	kernel.ptraceback = function(message, lvl)
+		TheMod:Say(traceback(message, (lvl or 1) + 1))
 	end
-
-	if VarExists("IsDLCEnabled") then
-		kernel.IsDLCEnabled = _G.IsDLCEnabled
-	else
-		kernel.IsDLCEnabled = Lambda.False
-	end
-	if VarExists("IsDLCInstalled") then
-		kernel.IsDLCInstalled = _G.IsDLCInstalled
-	else
-		kernel.IsDLCInstalled = kernel.IsDLCEnabled
-	end
-	if VarExists("REIGN_OF_GIANTS") then
-		kernel.REIGN_OF_GIANTS = _G.REIGN_OF_GIANTS
-	else
-		kernel.REIGN_OF_GIANTS = 1
-	end
-
-	if VarExists("DONT_STARVE_APPID") then
-		kernel.DONT_STARVE_APPID = _G.DONT_STARVE_APPID
-	else
-		kernel.DONT_STARVE_APPID = 219740
-	end
-
-	if VarExists("DONT_STARVE_TOGETHER_APPID") then
-		kernel.DONT_STARVE_TOGETHER_APPID = _G.DONT_STARVE_TOGETHER_APPID
-	else
-		kernel.DONT_STARVE_TOGETHER_APPID = 322330
-	end
-
-	local GetSteamAppID
-	local has_TheSim = VarExists("TheSim")
-	if has_TheSim and _G.TheSim.GetSteamAppID then
-		GetSteamAppID = function()
-			return _G.TheSim:GetSteamAppID()
-		end
-	else
-		GetSteamAppID = function()
-			if IsDST() then
-				return DONT_STARVE_TOGETHER_APPID
-			else
-				return DONT_STARVE_APPID
-			end
-		end
-		if has_TheSim then
-			getmetatable(_G.TheSim).__index.GetSteamAppID = GetSteamAppID
-		end
-	end
-	kernel.GetSteamAppId = GetSteamAppID
 end
 
 local function doextend(kernel)

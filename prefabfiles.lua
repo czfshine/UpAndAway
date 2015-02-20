@@ -3,11 +3,15 @@
 PrefabFiles = {
 	"winnie",
 	"winnie_staff",
+	"winnie_sheep",
 	"kettle",
 	"cauldron",
 	"refiner",
 
-	--Stuff in dev branch.
+	-- Dummy prefab for morgue trickery.
+	"staticdummy",
+
+	-- Stuff in progress.
 	--------------------
 
 	"pineapple_bush",
@@ -15,17 +19,37 @@ PrefabFiles = {
 	"cloudblob",
 	"alchemy_potions",
 	"potion_tunnel_mound",
-	--"metal_ball",
-	--"thundertree_sapling",
 	"colored_corn",
 	"gemcorn",
 	"gnome_wilson",
 	"gnome_decor",
 	"gnome_plot",
-	--"cloud_wall",
+	"cloud_wall",
+	"chest_sky",
+	"live_gnome",
+	"rubber_armor",
+	"shopkeeper_umbrella",
+	"rhinoman",
+
+	--"rubber_cap",
+	--"rubber_ducky",
+	--"thundertree_sapling",
 
 	------------------------------
 
+	-- Bosses and their drops.
+	"superconductor",
+	"radiant_orb",
+
+	"bean_giant",
+	"bean_brain",
+	"super_beans",
+
+	"octocopter",
+
+	------------------------------
+
+	"ua_cave",
 	"cloudrealm",
 	"cloud_mist",
 	"cloud_lightning",
@@ -74,8 +98,7 @@ PrefabFiles = {
 	"crystal_fragment_spire",
 	"cotton_vest",
 	"research_lectern",	
-	"bean_giant",	
-	"beanstalk_wall",	
+	"beanstalk_wall",
 	"smores",
 	"weather_machine",	
 	"skytrap",	
@@ -93,9 +116,7 @@ PrefabFiles = {
 	"golden_sunflower_seeds",
 	"gustflower",
 	"gustflower_seeds",		
-	"beanlet_zealot",	
-	"octocopter",	
-	"live_gnome",
+	"beanlet_zealot",		
 	"crystal_black",
 	"crystal_white",	
 	"beanlet",		
@@ -127,7 +148,6 @@ PrefabFiles = {
 	"refined_white_crystal",
 	"dragonblood_log",
 	"thunder_log",
-	"octocopter_wreckage",
 	"mushroom_hat",
 	"sheepherd",
 	"cloud_jelly",
@@ -146,19 +166,14 @@ PrefabFiles = {
 	--------------------
 
 	--"beanlet_lamp",
-	--"rubber_armor",
-	--"rubber_cap",
-	--"rubber_ducky",
 	--"crystal_moss",	
 	--"crystal_crown",
-	--"cloud_wall",
 	--"cloud_bomb",	
 	--"golden_amulet",
 	--"kite",
 	--"antlion",	
 	--"cheshire",
 	--"chimera",
-	--"bean_giant_statue",
 	--'bird_paradise',
 	--"rainbowcoon",	
 	--"grabber",
@@ -168,14 +183,12 @@ PrefabFiles = {
 	--"mantaspawner",
 	--"crystal_armor",
 	--"crystal_axe",
-	--"golden_amulet",	
 	--"sky_lemur",
 	--"quartz_torch",
 	--"jellyshroomfish",
 	--"manta",
 	--"manta_baby",
 	--"manta_leather",
-	--"shopkeep_umbrella",
 	
 }
 

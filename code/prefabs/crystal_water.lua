@@ -1,22 +1,15 @@
 BindGlobal()
 
+local CFG = TheMod:GetConfig()
+
 local assets =
 {
-	Asset("ANIM", "anim/crystal.zip"),
+    Asset("ANIM", "anim/crystal.zip"),
 }
 
-local prefabs =
-{
-   "crystal_fragment_water",
-   "flying_fish",
-}
+local prefabs = CFG.CRYSTAL.PREFABS
 
-local loot = 
-{
-   "crystal_fragment_water",
-   "crystal_fragment_water",
-   "crystal_fragment_water",
-}
+SetSharedLootTable("crystal_water", CFG.CRYSTAL_WATER.LOOT)
 
 local function MakeFishSpawner(inst)
     local fish = SpawnPrefab("flying_fish")
@@ -25,7 +18,6 @@ local function MakeFishSpawner(inst)
     fish.Transform:SetPosition(pt:Get())
     local down = TheCamera:GetDownVec()
     local angle = math.atan2(down.z, down.x) + (math.random()*60-30)*DEGREES
-    --local angle = (-TUNING.CAM_ROT-90 + math.random()*60-30)/180*PI
     local sp = math.random()*4+2
     fish.Physics:SetVel(sp*math.cos(angle), math.random()*2+8, sp*math.sin(angle))
     
@@ -35,11 +27,11 @@ local function MakeFishSpawner(inst)
 end
 
 local function onMined(inst, worker)
-	inst.components.lootdropper:DropLoot()
     inst.components.lootdropper:DropLoot()
-	inst.SoundEmitter:PlaySound("dontstarve/common/destroy_rock")
+    inst.components.lootdropper:DropLoot()
+    inst.SoundEmitter:PlaySound("dontstarve/common/destroy_rock")
 
-	inst:Remove()	
+    inst:Remove()	
 end
 
 local function workcallback(inst, worker, workleft)
@@ -49,7 +41,7 @@ local function workcallback(inst, worker, workleft)
         inst.components.lootdropper:DropLoot(pt)
         inst:Remove()
     else            
-        if workleft <= TUNING.SPILAGMITE_ROCK * 0.5 then
+        if workleft <= CFG.CRYSTAL.WORK_TIME * 0.5 then
             inst.AnimState:PlayAnimation("idle_low")
             print "Water at low."
         else
@@ -63,10 +55,7 @@ end
 local function GoToBrokenState(inst)
     inst.broken = true
     
-    inst.SoundEmitter:PlaySound("dontstarve/wilson/rock_break")
-    
-    --inst.components.workable:SetOnWorkCallback(workcallback)
-    --inst.components.workable:SetWorkLeft(TUNING.SPILAGMITE_ROCK)    
+    inst.SoundEmitter:PlaySound("dontstarve/wilson/rock_break")  
 end
 
 local function onsave(inst, data)
@@ -87,17 +76,17 @@ local function onload(inst, data)
 end
 
 local function fn(Sim)
-	local inst = CreateEntity()
-	inst.entity:AddTransform()
-	inst.entity:AddAnimState()
-	inst.entity:AddSoundEmitter()
-	MakeInventoryPhysics(inst)
+    local inst = CreateEntity()
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddSoundEmitter()
+    MakeInventoryPhysics(inst)
 
     --local minimap = inst.entity:AddMiniMapEntity()
     --minimap:SetIcon("crystal_water.png")
 
-	inst.AnimState:SetBank("crystal_water")
-	inst.AnimState:SetBuild("crystal")
+    inst.AnimState:SetBank("crystal_water")
+    inst.AnimState:SetBuild("crystal")
     inst.AnimState:PlayAnimation("idle_full")
     MakeObstaclePhysics(inst, 1)
 
@@ -105,27 +94,26 @@ local function fn(Sim)
     inst:AddTag("crystal_water")
 
 
-	------------------------------------------------------------------------
-	SetupNetwork(inst)
-	------------------------------------------------------------------------
+    ------------------------------------------------------------------------
+    SetupNetwork(inst)
+    ------------------------------------------------------------------------
 
 
-	inst:AddComponent("inspectable")
+    inst:AddComponent("inspectable")
 
     inst:AddComponent("lootdropper")
-    inst.components.lootdropper:SetLoot(loot) 	
+    inst.components.lootdropper:SetChanceLootTable("crystal_water")
 
-    local basescale = math.random(8,14)
-    local scale = math.random(3,4)
-    inst.Transform:SetScale(scale, scale, scale)
-    inst.AnimState:SetMultColour(1, 1, 1, 0.7)
+    inst.Transform:SetScale(CFG.CRYSTAL.SCALE(), CFG.CRYSTAL.SCALE(), CFG.CRYSTAL.SCALE())
+    inst.AnimState:SetMultColour(1, 1, 1, 0.8)
+
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
-    inst.components.workable:SetWorkLeft(TUNING.SPILAGMITE_ROCK)
+    inst.components.workable:SetWorkLeft(CFG.CRYSTAL.WORK_TIME)
     inst.components.workable:SetOnWorkCallback(workcallback)
     inst.components.workable:SetOnFinishCallback(onMined)	
 
-	return inst
+    return inst
 end
 
 return Prefab ("common/inventory/crystal_water", fn, assets, prefabs) 

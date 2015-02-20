@@ -1,15 +1,26 @@
-local Add = modrequire 'lib.addstrings'
-
+local Add = modrequire "lib.addstrings"
 
 -- Winnie stuff.
 --
 -- Added early so it doesn't override strings added below.
 
-STRINGS.CHARACTER_TITLES.winnie = "The Innocent"
+STRINGS.CHARACTER_TITLES.winnie = "The Shepherd"
 STRINGS.CHARACTER_NAMES.winnie = "Winnie"
-STRINGS.CHARACTER_DESCRIPTIONS.winnie = "*Is a vegetarian\n*Has a green thumb\n*Is not so innocent"
-STRINGS.CHARACTER_QUOTES.winnie = "\"Where have you gone, little sheep?\""
+STRINGS.CHARACTER_DESCRIPTIONS.winnie = "*Dislikes meat\
+*Has a green thumb\
+*Is not so innocent"
+STRINGS.CHARACTER_QUOTES.winnie = "\"Stay near me, little sheep.\""
+
 STRINGS.CHARACTERS.WINNIE = modrequire "speech_winnie"
+
+STRINGS.CHARACTERS.GENERIC.DESCRIBE.WINNIE = 
+{
+    GENERIC = "It's Winnie!",
+    ATTACKER = "She has a scary look in her eyes.",
+    MURDERER = "Murderer!",
+    REVIVER = "She's not so bad.",
+    GHOST = "Winnie could use a heart.",
+}
 
 
 --This gives each prefab its own in-game name.
@@ -22,8 +33,6 @@ Add.Names {
     balloon_firehound = "Red Hound",
     balloon_hound = "Hound",
     balloon_icehound = "Blue Hound",
-    bean_giant = "Bean Giant",
-    bean_giant_statue = "Giant Statue",
     beanlet = "Beanlet",
     beanlet_armor = "Beanlet Armor",
     beanlet_hut = "Flower Hut",
@@ -44,12 +53,12 @@ Add.Names {
     cauldron = "Cauldron",
     cheshire = "Cat",
     chimera = "Chimera",
-    cloud_algae = "Cloud Algae",
-    cloud_algae_fragment = "Cloud Algae",
+    cloud_algae = "Cloudy Algae",
+    cloud_algae_fragment = "Cloudy Algae",
     cloud_bomb = "Cloudbomb",
     cloud_bush = "Cloudbush",
-    cloud_coral = "Cloud Coral",
-    cloud_coral_fragment = "Cloud Coral",
+    cloud_coral = "Cloudy Coral",
+    cloud_coral_fragment = "Cloudy Coral",
     cloud_cotton = "Cloud Cotton",
     cloud_fruit = "Cloud Fruit",
     cloud_fruit_cooked = "Cooked Cloud Fruit",
@@ -58,6 +67,7 @@ Add.Names {
     cloud_storage = "Cloud Chest",
     cloud_turf = "Cloud Turf",
     cloud_wall = "Cloud Wall",
+    cloud_wall_item = "Cloud Wall",
     cloudcrag = "Cloudcrag",
     colored_corn = "Gem Corn",
     cotton_candy = "Cotton Candy",
@@ -133,11 +143,7 @@ Add.Names {
     marshmallow = "Marshmallow",
     monolith = "Monolith",
     mushroom_hat = "Mushroom Hat",
-    octocopter = "Octocopter",
     octocopter_wreckage = "Wrecked Octocopter",
-    octocopterpart1 = "Rotor Blade",
-    octocopterpart2 = "Rotor Plate",
-    octocopterpart3 = "Rotor Hub",
     owl = "Strix",
     package = "Unknown Package",
     pineapple_bush = "Pineapple Bush",
@@ -153,7 +159,8 @@ Add.Names {
     scarecrow = "Scarecrow",
     sheep = "Sheep",
     shopkeeper = "Shopkeeper",
-    sky_chest = "Eldrichest",
+    shopkeeper_umbrella = "Incredible Umbrella",
+    chest_sky = "Eldrichest",
     sky_lemur = "Lemur",
     skyflies = "Lightning Bug",
     skyflower = "Skyflower",
@@ -176,7 +183,7 @@ Add.Names {
     wind_axe = "Axe of Storms",
     winnie_staff = "Shepherd's Staff",
 
-    --Tea names.
+    -- Tea names.
     whitetea = "White Tea",
     petaltea = "Petal Tea",
     mixedpetaltea = "Combo Petal Tea",
@@ -191,7 +198,6 @@ Add.Names {
     cottontea = "Cottony Tea",
     goldtea = "Gold Tea",
     candytea = "Candy Tea",
-
     oolongtea = "Oolong Tea",
     chaitea = "Chai Tea",
     spoiledtea = "Spoiled Tea",
@@ -207,9 +213,27 @@ Add.Names {
     marshmallowtea = "Marshmallow Tea",
     ambrosiatea = "Ambrosia Tea",
     algaetea = "Algae Tea",
+
+    -- Cooked food names.
     redjelly = "Red Jelly",
     greenjelly = "Green Jelly",
     crystalcandy = "Crystal Candy",
+
+    -- Dummy name for morgue tricker.
+    staticdummy = "Static",
+
+    -- Bosses and their drops.
+    superconductor = "Superconductor",
+    radiant_orb = "Radiant Core",
+
+    octocopter = "Octocopter",
+    octocopterpart1 = "Rotor Blade",
+    octocopterpart2 = "Rotor Plate",
+    octocopterpart3 = "Rotor Hub",
+
+    bean_giant = "Bean Giant",
+    bean_brain = "Grey Legum",
+    super_beans = "Jumping Beans",
 }
 
 Add.QuotesFor "alien" {
@@ -2032,9 +2056,9 @@ Add.QuotesFor "shopkeeper" {
     wx78 = "A PEDDLER OF GOODS.",
 }    
 
-Add.QuotesFor "sky_chest" {
+Add.QuotesFor "chest_sky" {
     
-    GENERIC = "I wonder who's it is?",
+    GENERIC = "I wonder whose it is?",
     wathgrithr = "I don't trust it.",
     waxwell = "Very fancy.",
     webber = "To put stuff we don't need.",
@@ -2327,6 +2351,34 @@ Add.QuotesFor "winnie_staff" {
     winnie = "For herding my animal friends.",
 }
 
+-- Dunno if we'll ever need this, but I think it's gold.
+Add.QuotesFor "rabbit_tea" {
+    
+    GENERIC = "Ew, it's got a hare in it!",
+    wathgrithr = "Ew, it's got a hare in it!",
+    waxwell = "Ew, it's got a hare in it!",
+    webber = "Ew, it's got a hare in it!",
+    wendy = "Ew, it's got a hare in it!",
+    wickerbottom = "Ew, it's got a hare in it!",
+    willow = "Ew, it's got a hare in it!",
+    wolfgang = "Ew, it's got a hare in it!",
+    woodie = "Ew, it's got a hare in it!",
+    wx78 = "Ew, it's got a hare in it!",
+    winnie = "Ew, it's got a hare in it!",
+}
+
+Add.QuotesFor "bean_brain" {
+    
+    GENERIC = "What a strange looking bean...",
+
+}
+
+Add.QuotesFor "bean_brain.inedible" {
+    
+    GENERIC = "There's not enough left to eat.",
+
+}
+
 ------------------------------------------------------------------------
 
 
@@ -2343,6 +2395,18 @@ Add.QuotesFor {"balloon_icehound", "balloon_firehound"} {
 
 Add.StringsBy "ANY" {
     ANNOUNCE_CANFIX = "\nI think I can fix this!",
+}
+
+Add.StringsBy "GENERIC" {
+	ACTIONFAIL = {
+		CLIMB = {
+			GENERIC = "I can't do that.",
+			INVALID = "INVALID CLIMBING TARGET. THIS IS A BUG.",
+			INUSE = "I should wait for the current poll to end.",
+			GATHERPARTY = "I must gather my party before venturing forth.",
+			COOLDOWN = "Someone already tried this too recently.",
+		},
+	},
 }
 
 ------------------------------------------------------------------------
@@ -2367,10 +2431,15 @@ STRINGS.RECIPE_DESC.CRYSTAL_WALL_ITEM = "Elegant yet durable."
 STRINGS.RECIPE_DESC.REFINER = "Smash, crunch, create."
 STRINGS.RECIPE_DESC.WIND_AXE = "Stormy weather in your hands."
 STRINGS.RECIPE_DESC.BEANLET_ARMOR = "Armor that takes the weight off."
+STRINGS.RECIPE_DESC.MUSHROOM_HAT = "For the fungi in all of us."
+STRINGS.RECIPE_DESC.CLOUD_WALL_ITEM = "Its usefulness is questionable."
 
 STRINGS.POTION_NAMES = {
     "Mysterious",
     "Strange",
+    "Interesting",
+    "Alluring",
+    "Enticing",
     "Odd",
 }
 
@@ -2392,6 +2461,14 @@ STRINGS.GUMMYBEAR_NAMES = {
     "Devourer-y", 
     "Hungry", 
     "Tenderly", 
+}
+
+STRINGS.WINNIE_SHEEP_NAMES = {
+    "Facy",
+    "Mariane",
+    "Sedgewic",
+    "Charlie",
+    "Bear",
 }
 
 STRINGS.UPUI = {
@@ -2426,4 +2503,31 @@ STRINGS.UPUI = {
     CRAFTING = {
         NEEDRESEARCHLECTERN = ("Use a %s to build a prototype!"):format( STRINGS.NAMES.RESEARCH_LECTERN ),
     },
+	CLIMBINGSCREEN = {
+		UP = {
+			TITLE = "Up and Away",
+			BODY = "The land above is strange and foreign. Do you want to continue?",
+			BUTTONS = {
+				YES = "YES",
+				NO = "NO",
+				REGEN = "REGEN",
+			},
+			REGEN = {
+				TITLE = "Warning!",
+				BODY = "You are about to erase your cloud world.\nAre you sure you want to continue?",
+				BUTTONS = {
+					YES = "YES",
+					NO = "NO",
+				},
+			}
+		},
+		DOWN = {
+			TITLE = "Up and Away",
+			BODY = "Would you like to return to the world below?",
+			BUTTONS = {
+				YES = "YES",
+				NO = "NO",
+			},
+		},
+	},
 }   

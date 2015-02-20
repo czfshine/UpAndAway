@@ -1,29 +1,22 @@
 BindGlobal()
 
+local CFG = TheMod:GetConfig()
+
 local assets =
 {
-	Asset("ANIM", "anim/crystal.zip"),
+    Asset("ANIM", "anim/crystal.zip"),
 }
 
-local prefabs =
-{
-    "crystal_fragment_light",
-}
+local prefabs = CFG.CRYSTAL.PREFABS
 
-local loot = 
-{
-   "crystal_fragment_light",
-   "crystal_fragment_light",
-   "crystal_fragment_light",
-}
+SetSharedLootTable("crystal_light", CFG.CRYSTAL_LIGHT.LOOT)
 
 local function workcallback(inst, worker, workleft)
     if workleft <= 0 then
         inst.SoundEmitter:PlaySound("dontstarve/wilson/rock_break")
-        --inst.components.lootdropper:DropLoot()
         inst:Remove()
     else            
-        if workleft <= TUNING.SPILAGMITE_ROCK * 0.5 then
+        if workleft <= CFG.CRYSTAL.WORK_TIME * 0.5 then
             inst.AnimState:PlayAnimation("idle_low")
         else
             inst.AnimState:PlayAnimation("idle_med")
@@ -39,9 +32,9 @@ local function onMined(inst, worker)
 end
 
 local function fn(Sim)
-	local inst = CreateEntity()
-	local trans = inst.entity:AddTransform()
-	local anim = inst.entity:AddAnimState()
+    local inst = CreateEntity()
+    local trans = inst.entity:AddTransform()
+    local anim = inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
 
     --local minimap = inst.entity:AddMiniMapEntity()
@@ -66,22 +59,20 @@ local function fn(Sim)
     inst:AddComponent("inspectable")
 
     local light = inst.entity:AddLight()
-    light:SetFalloff(0.5)
-    light:SetIntensity(.8)
-    light:SetRadius(1.5)
+    light:SetFalloff(CFG.CRYSTAL_LIGHT.FALLOFF)
+    light:SetIntensity(CFG.CRYSTAL_LIGHT.INTENSITY)
+    light:SetRadius(CFG.CRYSTAL_LIGHT.RADIUS)
     light:SetColour(237/255, 237/255, 209/255)
-    light:Enable(false)
+    light:Enable(false)    
 
-    local basescale = math.random(8,14)
-    local scale = math.random(3,4)
-    inst.Transform:SetScale(scale, scale, scale)
+    inst.Transform:SetScale(CFG.CRYSTAL.SCALE(), CFG.CRYSTAL.SCALE(), CFG.CRYSTAL.SCALE())
 
     inst:AddComponent("lootdropper")
-    inst.components.lootdropper:SetLoot(loot)   
+    inst.components.lootdropper:SetChanceLootTable("crystal_light")   
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
-    inst.components.workable:SetWorkLeft(TUNING.ROCKS_MINE)
+    inst.components.workable:SetWorkLeft(CFG.CRYSTAL.WORK_TIME)
     inst.components.workable:SetOnFinishCallback(onMined)
     inst.components.workable:SetOnWorkCallback(workcallback)
 
@@ -89,7 +80,7 @@ local function fn(Sim)
     inst.components.staticchargeable:SetOnChargeFn(function() light:Enable(true) end)
     inst.components.staticchargeable:SetOnUnchargeFn(function() light:Enable(false) end)
 
-	return inst
+    return inst
 end
 
 return Prefab ("common/inventory/crystal_light", fn, assets, prefabs) 

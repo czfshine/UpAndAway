@@ -1,11 +1,13 @@
 BindGlobal()
 
+local CFG = TheMod:GetConfig()
+
 local assets =
 {
 	Asset("ANIM", "anim/cloud_coral_fragment.zip"),
 
-	Asset( "ATLAS", "images/inventoryimages/cloud_coral_fragment.xml" ),
-	Asset( "IMAGE", "images/inventoryimages/cloud_coral_fragment.tex" ),	
+	Asset( "ATLAS", inventoryimage_atlas("cloud_coral_fragment") ),
+	Asset( "IMAGE", inventoryimage_texture("cloud_coral_fragment") ),	
 }
 
 local function fn(Sim)
@@ -26,12 +28,12 @@ local function fn(Sim)
 
 
 	inst:AddComponent("stackable")
-	inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
+	inst.components.stackable.maxsize = CFG.CLOUD_CORAL_FRAGMENT.STACK_SIZE
 
 	inst:AddComponent("inspectable")
 
 	inst:AddComponent("inventoryitem")
-	inst.components.inventoryitem.atlasname = "images/inventoryimages/cloud_coral_fragment.xml"
+	inst.components.inventoryitem.atlasname = inventoryimage_atlas("cloud_coral_fragment")
 
 	inst:AddTag("coral")
 

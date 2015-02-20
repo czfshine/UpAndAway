@@ -30,7 +30,7 @@ local function GoHomeAction(inst)
     if inst.components.homeseeker and 
        inst.components.homeseeker.home and 
        inst.components.homeseeker.home:IsValid() and
-	   inst.sg:HasStateTag("trapped") == false then
+       inst.sg:HasStateTag("trapped") == false then
         return BufferedAction(inst, inst.components.homeseeker.home, ACTIONS.GOHOME)
     end
 end
@@ -52,10 +52,9 @@ function SheepBrain:OnStart()
     {
         WhileNode( function() return self.inst.components.health.takingfiredamage end, "OnFire", Panic(self.inst)),
         Follow(self.inst, function() return self.inst.components.follower and self.inst.components.follower.leader end, 1, 5, 5, false),
-        --FaceEntity(self.inst, GetFaceTargetFn, KeepFaceTargetFn),
         RunAway(self.inst, "scarytoprey", CFG.SHEEP.AVOID_PLAYER_DIST, CFG.SHEEP.AVOID_PLAYER_STOP),
         RunAway(self.inst, "scarytoprey", CFG.SHEEP.SEE_PLAYER_DIST, CFG.SHEEP.STOP_RUN_DIST, nil, true),
-        Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("home") end, CFG.SHEEP.MAX_WANDER_DIST),		
+        Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("home") end, CFG.SHEEP.MAX_WANDER_DIST),
         DoAction(self.inst, EatFoodAction)
     }, .25)
     self.bt = BT(self.inst, root)
